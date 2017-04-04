@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
 
-# ConversationSampleWatson
+# ConversationServiceWatson
 Sample conversation service that aimed to work with [MapService](https://github.com/hulop/MapService) and [NavCogIOSv3](https://github.com/hulop/NavCogIOSv3).
 This implementation enables to use a [Watson Conversation Service](https://www.ibm.com/watson/developercloud/conversation.html) as a backend service.
 
