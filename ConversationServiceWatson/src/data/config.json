@@ -9,5 +9,10 @@
 		"password": "$(CONV_WATSON_PASSWORD)",
 		"workspace_ja": "$(CONV_WATSON_WORKSPACE_JA)",
 		"workspace_en": "$(CONV_WATSON_WORKSPACE_EN)"
+	},
+	"logging_config": 
+	{
+		"endpoint": "$(CONV_MAP_SERVICE)/api/log",
+		"api_key": "$(CONV_MAP_APIKEY)"
 	}
 }
