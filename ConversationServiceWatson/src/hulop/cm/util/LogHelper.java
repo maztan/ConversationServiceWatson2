@@ -40,6 +40,9 @@ public class LogHelper {
 			JSONObject config = mConfig.getJSONObject("logging_config");
 			mEndpoint = config.getString("endpoint");
 			mApiKey = config.getString("api_key");
+			if (mApiKey.startsWith("!!")) {
+				mApiKey = null;
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
