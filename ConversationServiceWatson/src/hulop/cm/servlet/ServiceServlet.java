@@ -37,6 +37,7 @@ import org.apache.wink.json4j.JSONObject;
 
 import hulop.cm.qa.WatsonHelper;
 import hulop.cm.util.CommonUtil;
+import hulop.cm.util.LogHelper;
 
 /**
  * Servlet implementation class ServiceServlet
@@ -45,6 +46,7 @@ import hulop.cm.util.CommonUtil;
 public class ServiceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private LogHelper logHelper = new LogHelper();
 	private JSONObject mLastResultMap = new JSONObject();
 
 	/**
@@ -63,7 +65,9 @@ public class ServiceServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		String id = request.getParameter("id");
 		String lang = request.getParameter("lang");
-		if (!"ja".equals(lang)) {
+		try {
+			CommonUtil.getConfig().getJSONObject("watson_config").getString("workspace_" + lang).charAt(0);
+		} catch (Exception e) {
 			lang = "en";
 		}
 		final String clientId = id != null ? id : request.getSession(true).getId();
@@ -129,6 +133,11 @@ public class ServiceServlet extends HttpServlet {
 				}
 				CommonUtil.sendJSON(lastResult, response);
 				mLastResultMap.put(clientId, lastResult);
+				try {
+					logHelper.saveLog(clientId, lastResult);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				return;
 			}
 		} catch (JSONException e) {
