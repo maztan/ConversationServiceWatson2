@@ -65,7 +65,9 @@ public class ServiceServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		String id = request.getParameter("id");
 		String lang = request.getParameter("lang");
-		if (!"ja".equals(lang)) {
+		try {
+			CommonUtil.getConfig().getJSONObject("watson_config").getString("workspace_" + lang).charAt(0);
+		} catch (Exception e) {
 			lang = "en";
 		}
 		final String clientId = id != null ? id : request.getSession(true).getId();

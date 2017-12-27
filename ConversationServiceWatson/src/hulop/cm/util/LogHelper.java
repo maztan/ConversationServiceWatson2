@@ -46,6 +46,9 @@ public class LogHelper {
 	}
 
 	public boolean saveLog(String clientId, JSONObject log) throws Exception {
+		if (mApiKey == null) {
+			return false;
+		}
 		JSONObject data = new JSONObject();
 		data.put("event", "conversation");
 		data.put("client", clientId);
@@ -58,6 +61,9 @@ public class LogHelper {
 	}
 
 	public JSONArray getLog(String clientId, String start, String end, String skip, String limit) throws Exception {
+		if (mApiKey == null) {
+			return new JSONArray();
+		}
 		Form form = Form.form().add("action", "get").add("auditor_api_key", mApiKey).add("event", "conversation");
 		if (clientId != null) {
 			form.add("clientId", clientId);
