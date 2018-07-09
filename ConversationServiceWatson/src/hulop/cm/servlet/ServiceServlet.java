@@ -161,7 +161,7 @@ public class ServiceServlet extends HttpServlet {
 		context.put("conversation_id", "");
 		context.put("agent_name", "ja".equals(lang) ? "エラー" : "Error");
 		context.put("finish", finish);
-		context.put("system", new JSONObject().put("dialog_request_counter", 1));
+		context.put("system", new JSONObject().put("dialog_request_counter", 1).put("dialog_turn_counter", 1));
 
 		JSONObject result = new JSONObject();
 		result.put("output", output);
