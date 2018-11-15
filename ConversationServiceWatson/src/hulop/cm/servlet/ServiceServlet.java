@@ -64,6 +64,10 @@ public class ServiceServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String id = request.getParameter("id");
+		if (id == null || id.isEmpty()) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
 		String lang = request.getParameter("lang");
 		try {
 			CommonUtil.getConfig().getJSONObject("watson_config").getString("workspace_" + lang).charAt(0);
