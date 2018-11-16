@@ -70,7 +70,10 @@ public class ServiceServlet extends HttpServlet {
 		}
 		String lang = request.getParameter("lang");
 		try {
-			CommonUtil.getConfig().getJSONObject("watson_config").getString("workspace_" + lang).charAt(0);
+			CommonUtil.load("/data/messages_" + lang + ".json");
+			if (CommonUtil.getConfig().getJSONObject("watson_config").getString("workspace_" + lang).charAt(0) == '!') {
+				lang = "en";
+			}
 		} catch (Exception e) {
 			lang = "en";
 		}
@@ -117,15 +120,13 @@ public class ServiceServlet extends HttpServlet {
 								.getInt("error_count");
 					} catch (Exception e) {
 					}
+					JSONObject messages = CommonUtil.load("/data/messages_" + lang + ".json");
+					String agent_name = messages.getString("ERROR");
 					if (errorCount++ < 1) {
-						lastResult = simpleResult(text, "ja".equals(lang) ? "接続に問題が発生しました。もう一度お話し下さい"
-								: "A connection error occurred. Please say it again.", lang, false);
+						lastResult = simpleResult(text, messages.getString("TRY_AGAIN"), agent_name, false);
 					} else {
 						errorCount = 0;
-						lastResult = simpleResult(text,
-								"ja".equals(lang) ? "現在、対話を行うことが出来ません。あとでもう一度お試しください"
-										: "Conversation service temporarily unavailable. Please try again later",
-								lang, true);
+						lastResult = simpleResult(text, messages.getString("TRY_AGAIN_LATER"), agent_name, true);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -150,7 +151,7 @@ public class ServiceServlet extends HttpServlet {
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
-	private JSONObject simpleResult(String input_text, String output_text, String lang, boolean finish)
+	private JSONObject simpleResult(String input_text, String output_text, String agent_name, boolean finish)
 			throws Exception {
 		JSONObject input = new JSONObject();
 		if (input_text != null) {
@@ -163,7 +164,7 @@ public class ServiceServlet extends HttpServlet {
 
 		JSONObject context = new JSONObject();
 		context.put("conversation_id", "");
-		context.put("agent_name", "ja".equals(lang) ? "エラー" : "Error");
+		context.put("agent_name", agent_name);
 		context.put("finish", finish);
 		context.put("system", new JSONObject().put("dialog_request_counter", 1).put("dialog_turn_counter", 1));
 

@@ -120,6 +120,7 @@ public class WatsonHelper extends QAHelper {
 		Request request = Request.Post(new URI(api)).bodyString(bodyObj.toString(), ContentType.APPLICATION_JSON);
 
 		JSONObject result = (JSONObject) execute(mIgnoreCert, mUsername, mPassword, request);
+		System.out.println(result.toString(4));
 		if (result.has("context")) {
 			try {
 				JSONObject context = result.getJSONObject("context");

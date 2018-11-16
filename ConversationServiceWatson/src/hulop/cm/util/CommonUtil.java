@@ -118,6 +118,10 @@ public class CommonUtil {
 		return null;
 	}
 
+	public static JSONObject load(String path) throws Exception {
+		return new JSONObject(new InputStreamReader(CommonUtil.class.getResourceAsStream(path), "UTF-8"));
+	}
+
 	private static String readResource(String name) throws IOException {
 		InputStream is = CommonUtil.class.getResourceAsStream(name);
 		if (is != null) {

@@ -8,7 +8,9 @@
 		"username": "$(CONV_WATSON_USERNAME)",
 		"password": "$(CONV_WATSON_PASSWORD)",
 		"workspace_ja": "$(CONV_WATSON_WORKSPACE_JA)",
-		"workspace_en": "$(CONV_WATSON_WORKSPACE_EN)"
+		"workspace_en": "$(CONV_WATSON_WORKSPACE_EN)",
+		"workspace_ko": "$(CONV_WATSON_WORKSPACE_KO)",
+		"workspace_zh-CN": "$(CONV_WATSON_WORKSPACE_ZH-CN)"
 	},
 	"logging_config": 
 	{
