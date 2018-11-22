@@ -88,18 +88,6 @@ public class CommonUtil {
 		return gConfig;
 	}
 
-	public static Object getJSON(String path) {
-		try {
-			String str = readResource(path);
-			if (str != null) {
-				return JSON.parse(str);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public static Object getJSON(HttpServletRequest request) {
 		InputStream is = null;
 		try {
