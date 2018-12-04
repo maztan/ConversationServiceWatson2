@@ -133,4 +133,16 @@ public class CommonUtil {
 		}
 		return null;
 	}
+
+	private static final Pattern patTW = Pattern.compile("^zh-(Hant|HK|TW|MO)", Pattern.CASE_INSENSITIVE);
+	public static String langFilter(String lang) {
+		if (lang != null) {
+			if (patTW.matcher(lang).find()) {
+				lang = "zh-TW";
+			} else if ("zh".equals(lang = lang.substring(0, 2))) {
+				lang = "zh-CN";
+			}
+		}
+		return lang;
+	}
 }

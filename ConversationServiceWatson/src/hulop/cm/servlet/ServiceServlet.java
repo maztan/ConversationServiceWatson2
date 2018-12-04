@@ -68,7 +68,7 @@ public class ServiceServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
-		String lang = request.getParameter("lang");
+		String lang = CommonUtil.langFilter(request.getParameter("lang"));
 		try {
 			CommonUtil.load("/data/messages_" + lang + ".json");
 			if (CommonUtil.getConfig().getJSONObject("watson_config").getString("workspace_" + lang).charAt(0) == '!') {
