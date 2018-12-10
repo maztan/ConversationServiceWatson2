@@ -37,7 +37,7 @@ public class WatsonHelper extends QAHelper {
 	private JSONObject mLastResultMap = new JSONObject();
 	private Map<String, Long> mLastPostMap = new HashMap<String, Long>();
 
-	private String mEndpoint, mUsername, mPassword, mWorkspace, mVersion;
+	private String mEndpoint, mUsername, mPassword, mWorkspace;
 	private boolean mIgnoreCert;
 
 	private static Map<String, WatsonHelper> instances = new HashMap<String, WatsonHelper>();
@@ -55,11 +55,13 @@ public class WatsonHelper extends QAHelper {
 		mLang = lang;
 		try {
 			JSONObject config = mConfig.getJSONObject("watson_config");
-			mEndpoint = config.getString("endpoint");
+			mEndpoint = System.getenv("CONV_WATSON_ENDPOINT");
+			if (mEndpoint == null) {
+				mEndpoint = config.getString("endpoint");
+			}
 			mUsername = config.getString("username");
 			mPassword = config.getString("password");
 			mWorkspace = config.getString("workspace_" + lang);
-			mVersion = config.getString("version");
 			mIgnoreCert = config.getBoolean("ignoreCert");
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -113,7 +115,7 @@ public class WatsonHelper extends QAHelper {
 		}
 		bodyObj.put("alternate_intents", true);
 		bodyObj.put("input", input);
-		String api = String.format(mEndpoint, mWorkspace, mVersion);
+		String api = String.format(mEndpoint, mWorkspace);
 		System.out.println(api);
 		System.out.println(bodyObj.toString(4));
 
