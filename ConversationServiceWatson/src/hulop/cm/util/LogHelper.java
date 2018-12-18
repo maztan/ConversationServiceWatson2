@@ -32,12 +32,11 @@ import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 
 public class LogHelper {
-	private JSONObject mConfig = CommonUtil.getConfig();
 	private String mEndpoint, mApiKey;
 
 	public LogHelper() {
 		try {
-			JSONObject config = mConfig.getJSONObject("logging_config");
+			JSONObject config = CommonUtil.getConfig().getJSONObject("logging_config");
 			mEndpoint = config.getString("endpoint");
 			mApiKey = config.getString("api_key");
 			if (mEndpoint.startsWith("!!") || mApiKey.startsWith("!!")) {

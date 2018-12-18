@@ -32,6 +32,8 @@ import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 
+import hulop.cm.util.CommonUtil;
+
 public class WatsonHelper extends QAHelper {
 	private final String mLang;
 	private JSONObject mLastResultMap = new JSONObject();
@@ -54,7 +56,7 @@ public class WatsonHelper extends QAHelper {
 		super();
 		mLang = lang;
 		try {
-			JSONObject config = mConfig.getJSONObject("watson_config");
+			JSONObject config = CommonUtil.getConfig().getJSONObject("watson_config");
 			mEndpoint = System.getenv("CONV_WATSON_ENDPOINT");
 			if (mEndpoint == null) {
 				mEndpoint = config.getString("endpoint");

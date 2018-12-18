@@ -37,11 +37,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONObject;
 
-import hulop.cm.util.CommonUtil;
-
 public abstract class QAHelper {
 	private static final int TIMEOUT = 15 * 1000;
-	protected JSONObject mConfig = CommonUtil.getConfig();
 
 	public abstract JSONObject postMessage(String clientId, String text) throws Exception;
 
