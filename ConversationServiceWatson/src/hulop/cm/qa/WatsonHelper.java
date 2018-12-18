@@ -129,9 +129,7 @@ public class WatsonHelper extends QAHelper {
 			try {
 				JSONObject context = result.getJSONObject("context");
 				if (!context.has("output_pron")) {
-					OutputHandler handler = new OutputHandler(result);
-					result.getJSONObject("output").put("text", handler.getText());
-					context.put("output_pron", handler.getPron());
+					new OutputHandler(result).save();;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -161,21 +159,20 @@ public class WatsonHelper extends QAHelper {
 	}
 
 	private class OutputHandler {
+		private final JSONObject body;
 		private String text, pron;
 
 		public OutputHandler(JSONObject body) throws JSONException {
 			JSONArray array = body.getJSONObject("output").getJSONArray("text");
 			String join = array.join("\n");
+			this.body = body;
 			this.text = join.replaceAll("(\\.{3,})", "");
 			this.pron = join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? " 。\n\n" : "\n\n");
 		}
 
-		public JSONArray getText() throws JSONException {
-			return new JSONArray(text.split("\n"));
-		}
-
-		public String getPron() {
-			return pron;
+		public void save() throws JSONException {
+			body.getJSONObject("output").put("text", new JSONArray(text.split("\n")));
+			body.getJSONObject("context").put("output_pron", pron);
 		}
 	}
 }
