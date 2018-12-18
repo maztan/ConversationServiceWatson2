@@ -129,12 +129,9 @@ public class WatsonHelper extends QAHelper {
 			try {
 				JSONObject context = result.getJSONObject("context");
 				if (!context.has("output_pron")) {
-					JSONArray array = result.getJSONObject("output").getJSONArray("text");
-					String output_join = array.join("\n");
-					String output_text = output_join.replaceAll("(\\.{3,})", "");
-					String output_pron = output_join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? " 。\n\n" : "\n\n");
-					result.getJSONObject("output").put("text", new JSONArray(output_text.split("\n")));
-					context.put("output_pron", output_pron);
+					OutputHandler handler = new OutputHandler(result);
+					result.getJSONObject("output").put("text", handler.getText());
+					context.put("output_pron", handler.getPron());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -163,4 +160,22 @@ public class WatsonHelper extends QAHelper {
 		}
 	}
 
+	private class OutputHandler {
+		private String text, pron;
+
+		public OutputHandler(JSONObject body) throws JSONException {
+			JSONArray array = body.getJSONObject("output").getJSONArray("text");
+			String join = array.join("\n");
+			this.text = join.replaceAll("(\\.{3,})", "");
+			this.pron = join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? " 。\n\n" : "\n\n");
+		}
+
+		public JSONArray getText() throws JSONException {
+			return new JSONArray(text.split("\n"));
+		}
+
+		public String getPron() {
+			return pron;
+		}
+	}
 }
