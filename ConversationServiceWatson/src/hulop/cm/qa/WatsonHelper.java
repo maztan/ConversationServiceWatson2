@@ -130,23 +130,10 @@ public class WatsonHelper extends QAHelper {
 				JSONObject context = result.getJSONObject("context");
 				if (!context.has("output_pron")) {
 					JSONArray array = result.getJSONObject("output").getJSONArray("text");
-					String output_pron = array.join("\n");
-					String output_text = output_pron.replaceAll("(。{3,}|\\.{3,})", "");
-					if (!output_text.equals(output_pron)) {
-						System.out.println(output_pron + " ==> " + output_text);
-					}
+					String output_join = array.join("\n");
+					String output_text = output_join.replaceAll("(\\.{3,})", "");
+					String output_pron = output_join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? " 。\n\n" : "\n\n");
 					result.getJSONObject("output").put("text", new JSONArray(output_text.split("\n")));
-					String[] prons = output_pron.split("(\n|。{3,}|\\.{3,})");
-					if (prons.length > 1) {
-						StringBuilder sb = new StringBuilder();
-						for (int i = 0; i < prons.length; i++) {
-							if (i > 0) {
-								sb.append("ja".equals(mLang) ? "。 。\n\n" : "\n\n");
-							}
-							sb.append(prons[i]);
-						}
-						output_pron = sb.toString();
-					}
 					context.put("output_pron", output_pron);
 				}
 			} catch (Exception e) {
