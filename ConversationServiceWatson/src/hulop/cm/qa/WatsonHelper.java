@@ -104,15 +104,13 @@ public class WatsonHelper extends QAHelper {
 				}
 			}
 		}
+		JSONObject context = bodyObj.optJSONObject("context");
+		if (context == null) {
+			bodyObj.put("context", context = new JSONObject());
+		}
 		long now = System.currentTimeMillis();
 		Long lastWelcome = mLastPostMap.put(clientId, now);
 		if (lastWelcome != null) {
-			JSONObject context;
-			if (bodyObj.has("context")) {
-				context = bodyObj.getJSONObject("context");
-			} else {
-				bodyObj.put("context", context = new JSONObject());
-			}
 			context.put("elapsed_time", now - lastWelcome.longValue());
 		}
 		bodyObj.put("alternate_intents", true);
@@ -124,10 +122,10 @@ public class WatsonHelper extends QAHelper {
 		Request request = Request.Post(new URI(api)).bodyString(bodyObj.toString(), ContentType.APPLICATION_JSON);
 
 		JSONObject result = (JSONObject) execute(mIgnoreCert, mUsername, mPassword, request);
-		System.out.println(result.toString(4));
-		if (result.has("context")) {
+		context = result.optJSONObject("context");
+		if (context != null) {
 			try {
-				JSONObject context = result.getJSONObject("context");
+				System.out.println(result.toString(4));
 				if (!context.has("output_pron")) {
 					new OutputHandler(result).save();;
 				}
