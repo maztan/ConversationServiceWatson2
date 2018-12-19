@@ -165,7 +165,7 @@ public class WatsonHelper extends QAHelper {
 			String join = array.join("\n");
 			this.body = body;
 			this.text = join.replaceAll("(\\.{3,})", "");
-			this.pron = join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? " 。\n\n" : "\n\n");
+			this.pron = join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? "。\n\n" : "\n\n");
 		}
 
 		public void save() throws JSONException {
