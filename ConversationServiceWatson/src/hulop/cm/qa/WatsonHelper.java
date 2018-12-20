@@ -117,7 +117,7 @@ public class WatsonHelper extends QAHelper {
 		bodyObj.put("input", input);
 		String api = String.format(mEndpoint, mWorkspace);
 		System.out.println(api);
-		System.out.println(bodyObj.toString(4));
+		System.out.println("---- start of params ----\n" + bodyObj.toString(4) + "\n---- end ----");
 
 		Request request = Request.Post(new URI(api)).bodyString(bodyObj.toString(), ContentType.APPLICATION_JSON);
 
@@ -125,9 +125,10 @@ public class WatsonHelper extends QAHelper {
 		context = result.optJSONObject("context");
 		if (context != null) {
 			try {
-				System.out.println(result.toString(4));
+				System.out.println("---- start of result ----\n" + result.toString(4) + "\n---- end ----");
 				if (!context.has("output_pron")) {
-					new OutputHandler(result).save();;
+					OutputHandler handler = new OutputHandler(result);
+					handler.save();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
