@@ -42,7 +42,7 @@ public class WatsonHelper extends QAHelper {
 	private String mEndpoint, mUsername, mPassword, mWorkspace;
 	private boolean mIgnoreCert;
 
-	private static Map<String, WatsonHelper> instances = new HashMap<String, WatsonHelper>();
+	private static final Map<String, WatsonHelper> instances = new HashMap<String, WatsonHelper>();
 
 	public static WatsonHelper getInstance(String lang) {
 		WatsonHelper instance = instances.get(lang);
@@ -76,7 +76,7 @@ public class WatsonHelper extends QAHelper {
 		if (text != null) {
 			input.put("text", text);
 		}
-		JSONObject bodyObj = new JSONObject();
+		JSONObject requestBody = new JSONObject();
 		boolean hasText = text != null && text.length() > 0;
 		if (hasText && !mLastResultMap.has(clientId)) {
 			postMessage(clientId, null);
@@ -97,45 +97,45 @@ public class WatsonHelper extends QAHelper {
 						copy = new JSONObject().put("no_welcome", context.get("no_welcome"));
 					}
 					if (copy != null) {
-						bodyObj.put("context", copy);
+						requestBody.put("context", copy);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		JSONObject context = bodyObj.optJSONObject("context");
-		if (context == null) {
-			bodyObj.put("context", context = new JSONObject());
+		JSONObject requestContext = requestBody.optJSONObject("context");
+		if (requestContext == null) {
+			requestBody.put("context", requestContext = new JSONObject());
 		}
 		long now = System.currentTimeMillis();
 		Long lastWelcome = mLastPostMap.put(clientId, now);
 		if (lastWelcome != null) {
-			context.put("elapsed_time", now - lastWelcome.longValue());
+			requestContext.put("elapsed_time", now - lastWelcome.longValue());
 		}
-		bodyObj.put("alternate_intents", true);
-		bodyObj.put("input", input);
+		requestBody.put("alternate_intents", true);
+		requestBody.put("input", input);
 		String api = String.format(mEndpoint, mWorkspace);
 		System.out.println(api);
-		System.out.println("---- start of params ----\n" + bodyObj.toString(4) + "\n---- end ----");
+		System.out.println("---- start of request ----\n" + requestBody.toString(4) + "\n---- end ----");
 
-		Request request = Request.Post(new URI(api)).bodyString(bodyObj.toString(), ContentType.APPLICATION_JSON);
+		Request request = Request.Post(new URI(api)).bodyString(requestBody.toString(), ContentType.APPLICATION_JSON);
 
-		JSONObject result = (JSONObject) execute(mIgnoreCert, mUsername, mPassword, request);
-		context = result.optJSONObject("context");
-		if (context != null) {
+		JSONObject response = (JSONObject) execute(mIgnoreCert, mUsername, mPassword, request);
+		JSONObject responseContext = response.optJSONObject("context");
+		if (responseContext != null) {
 			try {
-				System.out.println("---- start of result ----\n" + result.toString(4) + "\n---- end ----");
-				if (!context.has("output_pron")) {
-					OutputHandler handler = new OutputHandler(result);
+				System.out.println("---- start of response ----\n" + response.toString(4) + "\n---- end ----");
+				if (!responseContext.has("output_pron")) {
+					ResponseHandler handler = new ResponseHandler(response);
 					handler.save();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		setLastResult(clientId, result);
-		return result;
+		setLastResult(clientId, response);
+		return response;
 	}
 
 	public JSONObject getLastResult(String clientId) {
@@ -157,21 +157,21 @@ public class WatsonHelper extends QAHelper {
 		}
 	}
 
-	private class OutputHandler {
-		private final JSONObject body;
+	private class ResponseHandler {
+		private final JSONObject response;
 		private String text, pron;
 
-		public OutputHandler(JSONObject body) throws JSONException {
-			JSONArray array = body.getJSONObject("output").getJSONArray("text");
+		public ResponseHandler(JSONObject response) throws JSONException {
+			JSONArray array = response.getJSONObject("output").getJSONArray("text");
 			String join = array.join("\n");
-			this.body = body;
+			this.response = response;
 			this.text = join.replaceAll("(\\.{3,})", "");
 			this.pron = join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? "。\n\n" : "\n\n");
 		}
 
 		public void save() throws JSONException {
-			body.getJSONObject("output").put("text", new JSONArray(text.split("\n")));
-			body.getJSONObject("context").put("output_pron", pron);
+			response.getJSONObject("output").put("text", new JSONArray(text.split("\n")));
+			response.getJSONObject("context").put("output_pron", pron);
 		}
 	}
 }

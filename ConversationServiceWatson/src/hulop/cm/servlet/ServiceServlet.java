@@ -70,7 +70,7 @@ public class ServiceServlet extends HttpServlet {
 		}
 		String lang = CommonUtil.langFilter(request.getParameter("lang"));
 		try {
-			CommonUtil.load("/data/messages_" + lang + ".json");
+			CommonUtil.load("/data/messages/" + lang + ".json");
 			if (CommonUtil.getConfig().getJSONObject("watson_config").getString("workspace_" + lang).charAt(0) == '!') {
 				lang = "en";
 			}
@@ -120,7 +120,7 @@ public class ServiceServlet extends HttpServlet {
 								.getInt("error_count");
 					} catch (Exception e) {
 					}
-					JSONObject messages = CommonUtil.load("/data/messages_" + lang + ".json");
+					JSONObject messages = CommonUtil.load("/data/messages/" + lang + ".json");
 					String agent_name = messages.getString("ERROR");
 					if (errorCount++ < 1) {
 						lastResult = simpleResult(text, messages.getString("TRY_AGAIN"), agent_name, false);
