@@ -71,7 +71,7 @@ public class WatsonHelper extends QAHelper {
 	}
 
 	@Override
-	public JSONObject postMessage(String clientId, String text) throws Exception {
+	public JSONObject postMessage(String clientId, String text, JSONObject clientContext) throws Exception {
 		JSONObject input = new JSONObject();
 		if (text != null) {
 			input.put("text", text);
@@ -79,26 +79,19 @@ public class WatsonHelper extends QAHelper {
 		JSONObject requestBody = new JSONObject();
 		boolean hasText = text != null && text.length() > 0;
 		if (hasText && !mLastResultMap.has(clientId)) {
-			postMessage(clientId, null);
+			postMessage(clientId, null, null);
 		}
 		if (mLastResultMap.has(clientId)) {
 			JSONObject lastResult = mLastResultMap.getJSONObject(clientId);
-			if (lastResult.has("context")) {
+			if (hasText && lastResult.has("context")) {
 				try {
 					JSONObject context = lastResult.getJSONObject("context");
-					JSONObject copy = null;
-					if (hasText) {
-						copy = (JSONObject) context.clone();
-						// context.remove("dest_info");
-						// context.remove("candidates_info");
-						copy.remove("output_pron");
-						copy.remove("navi");
-					} else if (context.has("no_welcome")) {
-						copy = new JSONObject().put("no_welcome", context.get("no_welcome"));
-					}
-					if (copy != null) {
-						requestBody.put("context", copy);
-					}
+					JSONObject copy = (JSONObject) context.clone();
+					// context.remove("dest_info");
+					// context.remove("candidates_info");
+					copy.remove("output_pron");
+					copy.remove("navi");
+					requestBody.put("context", copy);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -107,6 +100,15 @@ public class WatsonHelper extends QAHelper {
 		JSONObject requestContext = requestBody.optJSONObject("context");
 		if (requestContext == null) {
 			requestBody.put("context", requestContext = new JSONObject());
+		}
+		if (clientContext != null) {
+			for (String key : CLIENT_CONTEXT_KEYS) {
+				if (clientContext.has(key)) {
+					requestContext.put(key, clientContext.get(key));
+				} else {
+					requestContext.remove(key);
+				}
+			}
 		}
 		long now = System.currentTimeMillis();
 		Long lastWelcome = mLastPostMap.put(clientId, now);

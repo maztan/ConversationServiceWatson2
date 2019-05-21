@@ -39,8 +39,9 @@ import org.apache.wink.json4j.JSONObject;
 
 public abstract class QAHelper {
 	private static final int TIMEOUT = 15 * 1000;
+	protected static final String[] CLIENT_CONTEXT_KEYS = new String[] { "no_welcome", "latitude", "longitude", "floor", "building", "user_mode" };
 
-	public abstract JSONObject postMessage(String clientId, String text) throws Exception;
+	public abstract JSONObject postMessage(String clientId, String text, JSONObject context) throws Exception;
 
 	public QAHelper() {
 		super();

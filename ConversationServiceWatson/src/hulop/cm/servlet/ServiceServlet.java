@@ -86,13 +86,14 @@ public class ServiceServlet extends HttpServlet {
 		System.out.println(text);
 		WatsonHelper watHelper = WatsonHelper.getInstance(lang);
 		JSONObject result = null;
+		JSONObject context = null;
 		try {
 			if (bodyObj instanceof JSONObject) {
 				try {
+					context = ((JSONObject) bodyObj).optJSONObject("context");
 					JSONObject lastResult = watHelper.getLastResult(clientId);
 					if (lastResult != null) {
 						JSONObject lastContext = lastResult.getJSONObject("context");
-						JSONObject context = ((JSONObject) bodyObj).getJSONObject("context");
 						for (Iterator<String> it = context.keys(); it.hasNext();) {
 							String key = it.next();
 							lastContext.put(key, context.get(key));
@@ -103,7 +104,7 @@ public class ServiceServlet extends HttpServlet {
 				}
 			}
 			try {
-				result = watHelper.postMessage(clientId, text);
+				result = watHelper.postMessage(clientId, text, context);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
