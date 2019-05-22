@@ -101,15 +101,6 @@ public class WatsonHelper extends QAHelper {
 		if (requestContext == null) {
 			requestBody.put("context", requestContext = new JSONObject());
 		}
-		if (clientContext != null) {
-			for (String key : CLIENT_CONTEXT_KEYS) {
-				if (clientContext.has(key)) {
-					requestContext.put(key, clientContext.get(key));
-				} else {
-					requestContext.remove(key);
-				}
-			}
-		}
 		long now = System.currentTimeMillis();
 		Long lastWelcome = mLastPostMap.put(clientId, now);
 		if (lastWelcome != null) {
@@ -121,12 +112,17 @@ public class WatsonHelper extends QAHelper {
 		System.out.println(api);
 		System.out.println("---- start of request ----\n" + requestBody.toString(4) + "\n---- end ----");
 
+		addClientContext(clientContext, requestContext);
+		if ("$CONTEXT_DEBUG$".equals(text)) {
+			return requestBody;
+		}
 		Request request = Request.Post(new URI(api)).bodyString(requestBody.toString(), ContentType.APPLICATION_JSON);
 
 		JSONObject response = (JSONObject) execute(mIgnoreCert, mUsername, mPassword, request);
 		JSONObject responseContext = response.optJSONObject("context");
 		if (responseContext != null) {
 			try {
+				removeClientContext(responseContext);
 				System.out.println("---- start of response ----\n" + response.toString(4) + "\n---- end ----");
 				if (!responseContext.has("output_pron")) {
 					ResponseHandler handler = new ResponseHandler(response);

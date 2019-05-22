@@ -35,11 +35,12 @@ import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.wink.json4j.JSON;
+import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 
 public abstract class QAHelper {
 	private static final int TIMEOUT = 15 * 1000;
-	protected static final String[] CLIENT_CONTEXT_KEYS = new String[] { "no_welcome", "latitude", "longitude", "floor", "building", "user_mode" };
+	private static final String[] CLIENT_CONTEXT_KEYS = new String[] { "no_welcome", "latitude", "longitude", "floor", "building", "user_mode" };
 
 	public abstract JSONObject postMessage(String clientId, String text, JSONObject context) throws Exception;
 
@@ -68,4 +69,25 @@ public abstract class QAHelper {
 		return JSON.parse(strJSON.replaceAll("\\\\u0000", ""));
 	}
 
+	protected void addClientContext(JSONObject clientContext, JSONObject requestContext) {
+		if (clientContext != null) {
+			for (String key : CLIENT_CONTEXT_KEYS) {
+				if (clientContext.has(key)) {
+					try {
+						requestContext.put(key, clientContext.get(key));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else {
+					requestContext.remove(key);
+				}
+			}
+		}
+	}
+
+	protected void removeClientContext(JSONObject responseContext) {
+		for (String key : CLIENT_CONTEXT_KEYS) {
+			responseContext.remove(key);
+		}
+	}
 }
