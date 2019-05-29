@@ -108,11 +108,11 @@ public class WatsonHelper extends QAHelper {
 		}
 		requestBody.put("alternate_intents", true);
 		requestBody.put("input", input);
+		addClientContext(clientContext, requestContext);
 		String api = String.format(mEndpoint, mWorkspace);
 		System.out.println(api);
 		System.out.println("---- start of request ----\n" + requestBody.toString(4) + "\n---- end ----");
 
-		addClientContext(clientContext, requestContext);
 		if ("$CONTEXT_DEBUG$".equals(text)) {
 			return requestBody;
 		}
