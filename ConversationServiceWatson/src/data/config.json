@@ -9,7 +9,7 @@
 		"workspace_ja": "$(CONV_WATSON_WORKSPACE_JA)",
 		"workspace_en": "$(CONV_WATSON_WORKSPACE_EN)",
 		"workspace_ko": "$(CONV_WATSON_WORKSPACE_KO)",
-		"workspace_zh-CN": "$(CONV_WATSON_WORKSPACE_ZH-CN)"
+		"workspace_zh-CN": "$(CONV_WATSON_WORKSPACE_ZH_CN)"
 	},
 	"logging_config": 
 	{
