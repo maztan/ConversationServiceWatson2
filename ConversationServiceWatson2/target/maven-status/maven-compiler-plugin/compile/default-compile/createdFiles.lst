@@ -1,0 +1,9 @@
+hulop\cm\qa\QAHelper.class
+hulop\cm\servlet\ServiceServlet.class
+hulop\cm\qa\WatsonHelper$ResponseHandler.class
+hulop\cm\qa\WatsonHelper.class
+hulop\cm\qa\WatsonHelper2.class
+module-info.class
+hulop\cm\util\LogHelper.class
+hulop\cm\servlet\SimpleMessageResponse.class
+hulop\cm\util\CommonUtil.class

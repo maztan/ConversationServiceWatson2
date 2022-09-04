@@ -1,0 +1,20 @@
+{
+  "api_key": "6cNDJ0YAxPp-sHgew2K_4j-Un-po_H4cjF9F3g2gj-RJ",
+  "watson_config":
+  {
+    "assistantId": "d3c8b590-8589-4881-9392-8247b803725a",
+    "endpoint": "https://api.eu-gb.assistant.watson.cloud.ibm.com",
+    "ignoreCert": true,
+    "username": "apikey",
+    "password": "6cNDJ0YAxPp-sHgew2K_4j-Un-po_H4cjF9F3g2gj-RJ",
+    "workspace_ja": "$(CONV_WATSON_WORKSPACE_JA)",
+    "workspace_en": "$(CONV_WATSON_WORKSPACE_EN)",
+    "workspace_ko": "$(CONV_WATSON_WORKSPACE_KO)",
+    "workspace_zh-CN": "$(CONV_WATSON_WORKSPACE_ZH_CN)"
+  },
+  "logging_config":
+  {
+    "endpoint": "$(CONV_MAP_SERVICE)/api/log",
+    "api_key": "$(CONV_MAP_APIKEY)"
+  }
+}

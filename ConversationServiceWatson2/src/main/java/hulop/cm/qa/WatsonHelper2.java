@@ -116,23 +116,5 @@ public class WatsonHelper2 {
             e.printStackTrace();
         }
     }
-
-    private class ResponseHandler {
-        private final JSONObject response;
-        private String text, pron;
-
-        public ResponseHandler(JSONObject response) throws JSONException {
-            JSONArray array = response.getJSONObject("output").getJSONArray("text");
-            String join = array.join("\n");
-            this.response = response;
-            this.text = join.replaceAll("(\\.{3,})", "");
-            this.pron = join.replaceAll("(\\.{3,})", "ja".equals(mLang) ? "。\n\n" : "\n\n");
-        }
-
-        public void save() throws JSONException {
-            response.getJSONObject("output").put("text", new JSONArray(text.split("\n")));
-            response.getJSONObject("context").put("output_pron", pron);
-        }
-    }
 }
 
