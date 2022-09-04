@@ -4,26 +4,32 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ConversationServiceWatson</groupId>
 	<artifactId>ConversationServiceWatson</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>war</packaging>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/net.wasdev.maven.tools.targets/liberty-target -->
 		<dependency>
 			<groupId>net.wasdev.maven.tools.targets</groupId>
 			<artifactId>liberty-target</artifactId>
-			<version>17.0.0.4</version>
+			<version>22.0.0.6.1</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.wink/wink-json4j -->
 		<dependency>
 			<groupId>org.apache.wink</groupId>
 			<artifactId>wink-json4j</artifactId>
 			<version>1.4</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/fluent-hc -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
-			<version>4.3.6</version>
+			<version>4.5.13</version>
 		</dependency>
+
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>

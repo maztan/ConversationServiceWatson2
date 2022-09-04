@@ -25,12 +25,14 @@ package hulop.cm.qa;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.HttpClients;
@@ -51,16 +53,11 @@ public abstract class QAHelper {
 	protected Object execute(boolean ignoreCert, String username, String password, Request request) throws Exception {
 		HttpClient httpClient = null;
 		if (ignoreCert) {
-			httpClient = HttpClients.custom().setHostnameVerifier(new AllowAllHostnameVerifier())
-					.setSslcontext(new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-						public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-							return true;
-						}
-					}).build()).build();
+			httpClient = HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
 		}
 		Executor executor = Executor.newInstance(httpClient);
 		if (username != null) {
-			executor.auth(username, password);
+			executor.auth(new HttpHost("ibm.com"),username, password);
 		}
 		Response response = executor.execute(request.connectTimeout(TIMEOUT).socketTimeout(TIMEOUT));
 		Content content = response.returnContent();
