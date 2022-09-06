@@ -74,7 +74,7 @@ public class WatsonHelper2 {
     }
 
     public MessageResponse postMessage(String clientId, String text, JSONObject clientContext) throws Exception {
-        MessageInput messageInput = new MessageInput.Builder().text(text).build();
+        MessageInput messageInput = new MessageInput.Builder().messageType("text").text(text).build();
         MessageOptions.Builder messageOptionsBuilder = new MessageOptions.Builder().input(messageInput);
         messageOptionsBuilder.assistantId(assistantId).sessionId(sessionId);
 
